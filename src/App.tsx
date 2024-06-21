@@ -1,37 +1,25 @@
-import { useEffect, useState } from 'react'
-import './App.css'
-import ProductList from './components/ProductList'
+import { useEffect, useState } from "react"
+import axios from 'axios'
 
-const connect = () => console.log("Connecting");
-const disConnect = () => console.log("Disconnecting");
-function App() {
+interface User{
+  id: number,
+  name: string
+}
+const App = () => {
+  const [user, setUser]=useState<User[]>([]);
+  const [error, setError] = useState('');
+  useEffect(()=>{
+    axios.get<User[]>('https://jsonplaceholder.typicode.com/xusers')
+    .then(res => setUser(res.data))
+    .catch((err) => setError(err.message))
 
-  // const [category, setCategory] = useState('');
-
-  useEffect(() => {
-    connect();
-    return () => disConnect();
-  })
-
-  // const ref =useRef<HTMLInputElement>(null)
-
-  // useEffect(()=> {
-  // if(ref.current) ref.current.focus()
-  // })
-
-  // useEffect(() => {
-  //   document.title = "App Intro"
-  // })
+  }, [])
   return (
-    // <input ref={ref} type="text" className='form-control' />
     <>
-    {/* <select  className="form-select" onChange={(event) => setCategory(event.target.value)}>
-      <option selected></option>
-      <option value={"Groceries"}>Groceries</option>
-    <option value={"Clothings"}>Clothings</option>
+    
+    {error && <p className="text-danger">{error}</p>}
+  <ul>{user.map(user =><li key={user.id}>{user.id} {user.name}</li>) }</ul>
 
-    </select> */}
-    {/* <ProductList category={category}/> */}
     </>
   )
 }
